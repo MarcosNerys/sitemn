@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MN Imperialowls — Login</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦉</text></svg>">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--bg-primary); }
+
+    .login-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(0,200,224,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 20%, rgba(0,200,224,0.04) 0%, transparent 50%);
+    }
+
+    .login-page { display: flex; width: 100%; max-width: 960px; min-height: 580px; z-index: 1; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+
+    .login-banner {
+      flex: 1; background: linear-gradient(135deg, #0a1628 0%, #0d1f3c 50%, #091622 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 48px; position: relative; overflow: hidden;
+    }
+
+    .login-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0,200,224,0.12) 0%, transparent 70%);
+    }
+
+    .banner-owl {
+      font-size: 5rem; margin-bottom: 24px; position: relative; z-index: 1;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(0,200,224,0.4));
+    }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+    .banner-title { font-size: 2.2rem; color: var(--cyan); font-family: 'Rajdhani', sans-serif; font-weight: 700; text-align: center; position: relative; z-index: 1; }
+    .banner-sub { color: rgba(255,255,255,0.5); font-size: 0.9rem; text-align: center; margin-top: 8px; position: relative; z-index: 1; }
+
+    .banner-stats { display: flex; gap: 32px; margin-top: 40px; position: relative; z-index: 1; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--cyan); }
+    .stat-lbl { font-size: 0.7rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+
+    .login-form-area {
+      width: 400px; background: var(--bg-secondary);
+      display: flex; flex-direction: column; justify-content: center; padding: 48px;
+    }
+
+    .login-header { margin-bottom: 32px; }
+    .login-header h2 { font-size: 1.6rem; color: var(--text-primary); margin-bottom: 6px; }
+    .login-header p { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .input-group { position: relative; margin-bottom: 16px; }
+    .input-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.95rem; }
+    .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.95rem; font-family: 'Inter',sans-serif; transition: var(--transition); }
+    .input-group input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-glow); }
+    .input-group .toggle-pw { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; font-size: 0.95rem; }
+
+    .btn-login {
+      width: 100%; padding: 14px; background: var(--cyan); color: #000;
+      border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 1rem;
+      cursor: pointer; transition: var(--transition); font-family: 'Inter',sans-serif;
+      display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px;
+    }
+    .btn-login:hover { background: var(--cyan-dark); box-shadow: var(--shadow-cyan); transform: translateY(-1px); }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .login-links { display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.85rem; }
+    .login-links a { color: var(--text-secondary); }
+    .login-links a:hover { color: var(--cyan); }
+
+    .login-error { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: var(--accent-red); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 16px; display: none; }
+    .login-error.show { display: flex; align-items: center; gap: 8px; }
+
+    .theme-btn { position: fixed; top: 20px; right: 20px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); width: 40px; height: 40px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); z-index: 10; }
+    .theme-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    .demo-access { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .demo-access p { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 10px; }
+    .demo-users { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .demo-btn { padding: 6px 8px; background: var(--bg-hover); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; text-align: center; transition: var(--transition); font-family: 'Inter', sans-serif; }
+    .demo-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .login-banner { display: none; }
+      .login-form-area { width: 100%; min-height: 100vh; padding: 32px 24px; }
+      .login-page { border-radius: 0; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-bg"></div>
+
+  <button class="theme-btn theme-toggle" onclick="MNTheme.toggle()" title="Alternar tema">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <div class="login-page">
+    <!-- Banner Lateral -->
+    <div class="login-banner">
+      <div class="banner-owl">🦉</div>
+      <div class="banner-title">MN Imperialowls</div>
+      <div class="banner-sub">Gestão Esportiva Social</div>
+      <div class="banner-stats">
+        <div class="stat-item">
+          <div class="stat-num">🏆</div>
+          <div class="stat-lbl">Competição</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">👥</div>
+          <div class="stat-lbl">Equipes</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">📊</div>
+          <div class="stat-lbl">Gestão</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário de Login -->
+    <div class="login-form-area">
+      <div class="login-header">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Acesse o painel administrativo</p>
+      </div>
+
+      <div class="login-error" id="login-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="error-msg">Usuário ou senha incorretos.</span>
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="Usuário ou e-mail" autocomplete="username" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Senha" autocomplete="current-password" required>
+          <span class="toggle-pw" onclick="togglePw()"><i class="fas fa-eye" id="pw-eye"></i></span>
+        </div>
+        <button type="submit" class="btn-login" id="login-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          Entrar
+        </button>
+      </form>
+
+      <div class="login-links">
+        <a href="index.html"><i class="fas fa-arrow-left"></i> Site Público</a>
+        <a href="#" onclick="showResetModal()">Esqueci a senha</a>
+      </div>
+
+      <!-- Acessos Demo (remover em produção) -->
+      <div class="demo-access" id="demo-access">
+        <p>⚠️ Acessos de demonstração</p>
+        <div class="demo-users">
+          <div class="demo-btn" onclick="fillDemo('master','Master@2025!')">👑 Master</div>
+          <div class="demo-btn" onclick="fillDemo('ceo','Ceo@2025!')">🏢 CEO</div>
+          <div class="demo-btn" onclick="fillDemo('marketing','Mkt@2025!')">📣 Marketing</div>
+          <div class="demo-btn" onclick="fillDemo('org','Org@2025!')">⚙️ Organização</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Reset Senha -->
+  <div class="modal-overlay" id="reset-modal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fas fa-key"></i> Redefinir Senha</div>
+        <button class="modal-close" onclick="closeModal('reset-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-secondary);margin-bottom:16px">Digite seu e-mail cadastrado. Você receberá um link para redefinir a senha.</p>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" id="reset-email" class="form-control" placeholder="seu@email.com">
+        </div>
+        <div id="reset-msg" style="display:none"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('reset-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="handleReset()">
+          <i class="fas fa-paper-plane"></i> Enviar Link
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Verifica se já está logado
+    (async function() {
+      try {
+        if (typeof SupaAuth !== 'undefined') {
+          const session = await SupaAuth.getSession();
+          if (session) window.location.href = 'dashboard.html';
+        } else {
+          const stored = sessionStorage.getItem('mn_user');
+          if (stored) window.location.href = 'dashboard.html';
+        }
+      } catch(e) {}
+    })();
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      const errDiv = document.getElementById('login-error');
+      const errMsg = document.getElementById('error-msg');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+      errDiv.classList.remove('show');
+
+      try {
+        await MNAuth.login(username, password);
+      } catch(err) {
+        errMsg.textContent = err.message || 'Usuário ou senha incorretos.';
+        errDiv.classList.add('show');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+      }
+    }
+
+    function fillDemo(user, pw) {
+      document.getElementById('username').value = user;
+      document.getElementById('password').value = pw;
+    }
+
+    function togglePw() {
+      const inp = document.getElementById('password');
+      const eye = document.getElementById('pw-eye');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        eye.className = 'fas fa-eye-slash';
+      } else {
+        inp.type = 'password';
+        eye.className = 'fas fa-eye';
+      }
+    }
+
+    function showResetModal() {
+      document.getElementById('reset-modal').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    async function handleReset() {
+      const email = document.getElementById('reset-email').value.trim();
+      const msgDiv = document.getElementById('reset-msg');
+
+      if (!email) { alert('Digite um e-mail válido.'); return; }
+
+      try {
+        if (typeof SupaAuth !== 'undefined') {
+          await SupaAuth.resetPassword(email);
+        }
+        msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> Link enviado! Verifique seu e-mail.</div>';
+        msgDiv.style.display = 'block';
+      } catch(e) {
+        msgDiv.innerHTML = '<div class="alert alert-error"><i class="fas fa-times-circle"></i> Erro ao enviar. Tente novamente.</div>';
+        msgDiv.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

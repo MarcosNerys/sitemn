@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MN Imperialowls — Projeto Social Esportivo</title>
+  <meta name="description" content="MN Imperialowls — Projeto social esportivo dedicado ao desenvolvimento de jovens atletas.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦉</text></svg>">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Site Público ─────────────────────────── */
+    .public-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 16px 32px; display: flex; align-items: center; gap: 16px;
+      background: rgba(10,12,15,0.85); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); transition: background 0.3s;
+    }
+    [data-theme="light"] .public-nav { background: rgba(255,255,255,0.85); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo span { font-size: 1.8rem; filter: drop-shadow(0 0 8px var(--cyan)); }
+    .nav-logo h1 { font-size: 1.2rem; color: var(--cyan); white-space: nowrap; }
+    .nav-links { display: flex; gap: 24px; flex: 1; justify-content: center; }
+    .nav-links a { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-actions { display: flex; gap: 8px; align-items: center; }
+    .btn-nav-cta { background: var(--cyan); color: #000; padding: 8px 18px; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.85rem; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-nav-cta:hover { background: var(--cyan-dark); }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 100px 32px 80px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,200,224,0.1) 0%, transparent 60%);
+      position: relative; overflow: hidden;
+    }
+    .hero-particles { position: absolute; inset: 0; pointer-events: none; }
+    .particle { position: absolute; border-radius: 50%; background: var(--cyan); opacity: 0.3; animation: float-particle linear infinite; }
+    @keyframes float-particle { from { transform: translateY(100vh) rotate(0); opacity: 0; } 10% { opacity: 0.3; } 90% { opacity: 0.3; } to { transform: translateY(-100px) rotate(360deg); opacity: 0; } }
+    .hero-owl { font-size: 5rem; margin-bottom: 24px; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(0,200,224,0.5)); }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+    .hero-title { font-size: 3.5rem; font-weight: 900; background: linear-gradient(135deg, var(--cyan) 0%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; line-height: 1.1; }
+    .hero-sub { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 36px; }
+    .hero-stats { display: flex; gap: 48px; justify-content: center; margin-top: 48px; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-family: 'Rajdhani', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--cyan); }
+    .hero-stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Seções */
+    section { padding: 80px 32px; max-width: 1200px; margin: 0 auto; }
+    .section-badge { display: inline-block; background: var(--cyan-glow); border: 1px solid rgba(0,200,224,.3); color: var(--cyan); padding: 6px 16px; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .section-main-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; }
+    .section-desc { color: var(--text-secondary); font-size: 1rem; max-width: 600px; }
+
+    /* Missão / Visão / Valores */
+    .mvv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 48px; }
+    .mvv-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 32px; transition: var(--transition); }
+    .mvv-card:hover { border-color: var(--cyan); box-shadow: var(--shadow-cyan); transform: translateY(-4px); }
+    .mvv-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .mvv-title { font-size: 1.2rem; font-weight: 700; color: var(--cyan); margin-bottom: 12px; }
+
+    /* Impacto */
+    .impacto-section { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 32px; }
+    .impacto-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; max-width: 1200px; margin: 48px auto 0; }
+    .impacto-num { font-family: 'Rajdhani', sans-serif; font-size: 3rem; font-weight: 800; color: var(--cyan); }
+    .impacto-label { color: var(--text-secondary); font-size: 0.9rem; }
+
+    /* Contato / Formulários */
+    .contato-tabs { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+    .contato-tab-btn {
+      padding: 12px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
+      border: 2px solid var(--border); background: var(--bg-card); color: var(--text-secondary);
+      cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 8px;
+    }
+    .contato-tab-btn.active { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-glow); }
+    .contato-tab-btn.patrocinador.active { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.1); }
+    .contato-tab-btn.voluntario.active { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.1); }
+    .contato-form-area { display: none; }
+    .contato-form-area.active { display: block; }
+
+    .submit-btn {
+      width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm);
+      font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Inter', sans-serif; transition: var(--transition); margin-top: 16px;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .submit-btn.btn-patrocinador { background: #f59e0b; color: #000; }
+    .submit-btn.btn-voluntario   { background: #22c55e; color: #fff; }
+    .submit-btn.btn-atleta       { background: var(--cyan); color: #000; }
+    .submit-btn.btn-geral        { background: #8b5cf6; color: #fff; }
+
+    /* Footer */
+    footer { background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 48px 32px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; max-width: 1200px; margin: 0 auto; }
+    .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .footer-desc { color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; }
+    .footer-links h4 { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+    .footer-links ul { list-style: none; }
+    .footer-links li { margin-bottom: 8px; }
+    .footer-links a { color: var(--text-muted); font-size: 0.85rem; }
+    .footer-links a:hover { color: var(--cyan); }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; margin-top: 48px; text-align: center; color: var(--text-muted); font-size: 0.8rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+    /* Equipes */
+    .equipes-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 48px; }
+
+    @media (max-width: 900px) {
+      .mvv-grid, .impacto-grid, .equipes-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.2rem; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .public-nav { padding: 12px 16px; }
+      .nav-links { display: none; }
+      section { padding: 60px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="public-nav">
+    <div class="nav-logo">
+      <span>🦉</span>
+      <h1>MN Imperialowls</h1>
+    </div>
+    <div class="nav-links">
+      <a href="#sobre">Sobre</a>
+      <a href="#missao">Missão</a>
+      <a href="#equipes">Equipes</a>
+      <a href="#impacto">Impacto</a>
+      <a href="#contato">Contato</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-icon theme-toggle" onclick="MNTheme.toggle()" title="Tema" style="width:36px;height:36px;border-radius:50%">
+        <i class="fas fa-moon"></i>
+      </button>
+      <a href="login.html" class="btn-nav-cta"><i class="fas fa-sign-in-alt"></i> Área Restrita</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero" id="hero">
+    <div class="hero-particles" id="particles"></div>
+    <div style="position:relative;z-index:1">
+      <div class="hero-owl">🦉</div>
+      <div class="hero-title" id="hero_titulo">MN Imperialowls</div>
+      <p class="hero-sub" id="hero_subtitulo">Projeto social esportivo dedicado ao desenvolvimento de jovens atletas, formando campeões dentro e fora das quadras.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="#contato" class="btn btn-primary" style="font-size:1rem;padding:14px 28px">
+          <i class="fas fa-handshake"></i> Faça Parte
+        </a>
+        <a href="#sobre" class="btn btn-secondary" style="font-size:1rem;padding:14px 28px">
+          <i class="fas fa-info-circle"></i> Saiba Mais
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num" id="stat1">150+</div><div class="hero-stat-label">Atletas</div></div>
+        <div class="hero-stat"><div class="hero-stat-num" id="stat2">5+</div><div class="hero-stat-label">Equipes</div></div>
+        <div class="hero-stat"><div class="hero-stat-num" id="stat3">3</div><div class="hero-stat-label">Anos</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOBRE -->
+  <section id="sobre">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div>
+        <div class="section-badge">Sobre nós</div>
+        <h2 class="section-main-title" id="sobre_titulo">Quem Somos</h2>
+        <p style="color:var(--text-secondary);line-height:1.8;margin-bottom:16px" id="sobre_texto">O MN Imperialowls é um projeto social esportivo comprometido com o desenvolvimento integral de jovens atletas, oferecendo formação técnica, ética e cidadania.</p>
+        <p style="color:var(--text-secondary);line-height:1.8" id="sobre_historia">Fundado com a missão de transformar vidas através do esporte, o projeto oferece treinamento de qualidade, oportunidades de competição e suporte para que cada atleta alcance seu máximo potencial.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px;text-align:center">
+        <div style="font-size:8rem;filter:drop-shadow(0 0 30px rgba(0,200,224,0.4))">🦉</div>
+        <div style="color:var(--cyan);font-size:1.2rem;font-weight:700;margin-top:16px">Imperial Owls</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSÃO / VISÃO / VALORES -->
+  <section id="missao" style="background:var(--bg-secondary);max-width:100%;padding:80px 0">
+    <div style="max-width:1200px;margin:0 auto;padding:0 32px">
+      <div style="text-align:center;margin-bottom:16px">
+        <div class="section-badge">Propósito</div>
+        <h2 class="section-main-title">Missão, Visão e Valores</h2>
+      </div>
+      <div class="mvv-grid">
+        <div class="mvv-card">
+          <div class="mvv-icon">🎯</div>
+          <div class="mvv-title">Missão</div>
+          <p id="missao_texto" style="color:var(--text-secondary);line-height:1.7">Desenvolver jovens atletas com excelência técnica, formação humana e valores que os tornem líderes dentro e fora das quadras.</p>
+        </div>
+        <div class="mvv-card">
+          <div class="mvv-icon">🔭</div>
+          <div class="mvv-title">Visão</div>
+          <p id="visao_texto" style="color:var(--text-secondary);line-height:1.7">Ser referência nacional em projetos sociais esportivos, impactando comunidades e revelando talentos para o esporte profissional.</p>
+        </div>
+        <div class="mvv-card">
+          <div class="mvv-icon">💎</div>
+          <div class="mvv-title">Valores</div>
+          <p id="valores_texto" style="color:var(--text-secondary);line-height:1.7">Integridade • Compromisso • Trabalho em equipe • Respeito • Superação • Inclusão • Excelência</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPES -->
+  <section id="equipes">
+    <div style="text-align:center;margin-bottom:0">
+      <div class="section-badge">Times</div>
+      <h2 class="section-main-title">Nossas Equipes</h2>
+      <p class="section-desc" style="margin:0 auto">Conheça os times que fazem parte do projeto MN Imperialowls e inspire-se com cada história.</p>
+    </div>
+    <div class="equipes-grid" id="equipes-site">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </section>
+
+  <!-- IMPACTO -->
+  <div class="impacto-section" id="impacto">
+    <div style="max-width:1200px;margin:0 auto;text-align:center">
+      <div class="section-badge">Impacto</div>
+      <h2 class="section-main-title">Nosso Impacto Social</h2>
+      <p class="section-desc" style="margin:0 auto" id="impacto_texto">Transformando vidas através do esporte, educação e cidadania.</p>
+    </div>
+    <div class="impacto-grid">
+      <div style="text-align:center">
+        <div class="impacto-num" id="impacto_num1">500+</div>
+        <div class="impacto-label" id="impacto_label1">Jovens Atendidos</div>
+      </div>
+      <div style="text-align:center">
+        <div class="impacto-num" id="impacto_num2">50+</div>
+        <div class="impacto-label" id="impacto_label2">Parceiros</div>
+      </div>
+      <div style="text-align:center">
+        <div class="impacto-num" id="impacto_num3">10+</div>
+        <div class="impacto-label" id="impacto_label3">Competições</div>
+      </div>
+      <div style="text-align:center">
+        <div class="impacto-num">🏆</div>
+        <div class="impacto-label">Títulos Conquistados</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTATO -->
+  <section id="contato">
+    <div style="text-align:center;margin-bottom:40px">
+      <div class="section-badge">Entre em Contato</div>
+      <h2 class="section-main-title">Faça Parte do Projeto</h2>
+      <p class="section-desc" style="margin:0 auto">Selecione o tipo de contato que melhor representa você e preencha o formulário.</p>
+    </div>
+
+    <div style="max-width:800px;margin:0 auto">
+      <!-- Tabs de contato -->
+      <div class="contato-tabs">
+        <button class="contato-tab-btn patrocinador" onclick="showContato('patrocinador',this)">⭐ Quero ser Patrocinador</button>
+        <button class="contato-tab-btn voluntario" onclick="showContato('voluntario',this)">💚 Quero ser Voluntário</button>
+        <button class="contato-tab-btn active" onclick="showContato('atleta',this)">🏃 Quero ser Atleta</button>
+        <button class="contato-tab-btn" onclick="showContato('geral',this)">📨 Contato Geral</button>
+      </div>
+
+      <!-- Formulário: Patrocinador -->
+      <div id="form-patrocinador" class="contato-form-area card">
+        <h3 style="color:#f59e0b;margin-bottom:20px">⭐ Formulário de Patrocínio</h3>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Nome Completo *</label><input type="text" id="pat-nome" class="form-control" placeholder="Seu nome"></div>
+          <div class="form-group"><label class="form-label">Empresa</label><input type="text" id="pat-empresa" class="form-control" placeholder="Nome da empresa"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">CNPJ</label><input type="text" id="pat-cnpj" class="form-control" placeholder="00.000.000/0001-00"></div>
+          <div class="form-group"><label class="form-label">Cargo</label><input type="text" id="pat-cargo" class="form-control" placeholder="Seu cargo"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">E-mail *</label><input type="email" id="pat-email" class="form-control" placeholder="email@empresa.com"></div>
+          <div class="form-group"><label class="form-label">Telefone</label><input type="text" id="pat-tel" class="form-control" placeholder="(11) 99999-9999"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Tipo de Patrocínio</label>
+            <select id="pat-tipo" class="form-control">
+              <option value="financeiro">Financeiro</option>
+              <option value="material">Material/Equipamentos</option>
+              <option value="servicos">Serviços</option>
+              <option value="midia">Mídia/Divulgação</option>
+              <option value="misto">Misto</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Faixa de Investimento</label>
+            <select id="pat-investimento" class="form-control">
+              <option value="ate1k">Até R$ 1.000/mês</option>
+              <option value="1k5k">R$ 1.000 a R$ 5.000/mês</option>
+              <option value="5k15k">R$ 5.000 a R$ 15.000/mês</option>
+              <option value="acima15k">Acima de R$ 15.000/mês</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Segmento da Empresa</label><input type="text" id="pat-segmento" class="form-control" placeholder="Ex: Alimentação, Tecnologia, Esportes..."></div>
+        <div class="form-group"><label class="form-label">Mensagem</label><textarea id="pat-msg" class="form-control" placeholder="Conte-nos sobre seu interesse em patrocinar o projeto..."></textarea></div>
+        <button class="submit-btn btn-patrocinador" onclick="enviarContato('patrocinador')"><i class="fas fa-handshake"></i> Enviar Proposta de Patrocínio</button>
+        <div id="pat-success" class="alert alert-success mt-2" style="display:none"><i class="fas fa-check-circle"></i> Proposta enviada! Entraremos em contato em breve.</div>
+      </div>
+
+      <!-- Formulário: Voluntário -->
+      <div id="form-voluntario" class="contato-form-area card">
+        <h3 style="color:#22c55e;margin-bottom:20px">💚 Formulário de Voluntariado</h3>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Nome Completo *</label><input type="text" id="vol-nome" class="form-control" placeholder="Seu nome completo"></div>
+          <div class="form-group"><label class="form-label">Profissão</label><input type="text" id="vol-prof" class="form-control" placeholder="Sua profissão"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">E-mail *</label><input type="email" id="vol-email" class="form-control" placeholder="seu@email.com"></div>
+          <div class="form-group"><label class="form-label">WhatsApp</label><input type="text" id="vol-tel" class="form-control" placeholder="(11) 99999-9999"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Disponibilidade</label>
+          <select id="vol-disponibilidade" class="form-control">
+            <option value="fins_semana">Fins de semana</option>
+            <option value="semanal">Semanal (horas definidas)</option>
+            <option value="eventual">Eventual (por projeto)</option>
+            <option value="integral">Período integral</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Áreas de Atuação</label>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px">
+            ${['Treinamento Esportivo','Educação','Saúde/Nutrição','Psicologia','Marketing/Comunicação','Tecnologia','Jurídico/Administrativo','Logística'].map(area => `
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border)">
+                <input type="checkbox" name="vol-area" value="${area}"> <span style="font-size:0.85rem">${area}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Experiência Relevante</label><textarea id="vol-experiencia" class="form-control" placeholder="Descreva sua experiência..."></textarea></div>
+        <button class="submit-btn btn-voluntario" onclick="enviarContato('voluntario')"><i class="fas fa-heart"></i> Quero Ser Voluntário</button>
+        <div id="vol-success" class="alert alert-success mt-2" style="display:none"><i class="fas fa-check-circle"></i> Inscrição recebida! Obrigado pelo interesse.</div>
+      </div>
+
+      <!-- Formulário: Atleta -->
+      <div id="form-atleta" class="contato-form-area active card">
+        <h3 style="color:var(--cyan);margin-bottom:20px">🏃 Formulário de Inscrição — Atleta</h3>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Nome Completo *</label><input type="text" id="atl-nome" class="form-control" placeholder="Nome do atleta"></div>
+          <div class="form-group"><label class="form-label">Data de Nascimento</label><input type="date" id="atl-nasc" class="form-control"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Nome do Responsável (se menor)</label><input type="text" id="atl-resp" class="form-control" placeholder="Nome do responsável"></div>
+          <div class="form-group"><label class="form-label">Cidade/Bairro</label><input type="text" id="atl-cidade" class="form-control" placeholder="Sua cidade"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">E-mail *</label><input type="email" id="atl-email" class="form-control" placeholder="email@exemplo.com"></div>
+          <div class="form-group"><label class="form-label">WhatsApp</label><input type="text" id="atl-tel" class="form-control" placeholder="(11) 99999-9999"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Modalidade de Interesse</label>
+            <select id="atl-modalidade" class="form-control">
+              <option value="">Selecionar...</option>
+              <option value="basquete">🏀 Basquete</option>
+              <option value="volei">🏐 Vôlei</option>
+              <option value="futsal">⚽ Futsal</option>
+              <option value="handebol">🤾 Handebol</option>
+              <option value="atletismo">🏃 Atletismo</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nível</label>
+            <select id="atl-nivel" class="form-control">
+              <option value="iniciante">Iniciante (nunca treinei)</option>
+              <option value="recreativo">Recreativo (treinos informais)</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="avancado">Avançado</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Histórico Esportivo</label><textarea id="atl-historico" class="form-control" placeholder="Já praticou algum esporte? Participou de alguma equipe?"></textarea></div>
+        <div class="form-group"><label class="form-label">Por que quer fazer parte do MN Imperialowls?</label><textarea id="atl-motivacao" class="form-control" placeholder="Conta pra gente sua motivação..."></textarea></div>
+        <button class="submit-btn btn-atleta" onclick="enviarContato('atleta')"><i class="fas fa-running"></i> Enviar Inscrição</button>
+        <div id="atl-success" class="alert alert-success mt-2" style="display:none"><i class="fas fa-check-circle"></i> Inscrição enviada! Nossa equipe entrará em contato.</div>
+      </div>
+
+      <!-- Formulário: Geral -->
+      <div id="form-geral" class="contato-form-area card">
+        <h3 style="color:#8b5cf6;margin-bottom:20px">📨 Contato Geral</h3>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Nome *</label><input type="text" id="ger-nome" class="form-control" placeholder="Seu nome"></div>
+          <div class="form-group"><label class="form-label">E-mail *</label><input type="email" id="ger-email" class="form-control" placeholder="seu@email.com"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label class="form-label">Telefone</label><input type="text" id="ger-tel" class="form-control" placeholder="(11) 99999-9999"></div>
+          <div class="form-group">
+            <label class="form-label">Assunto</label>
+            <select id="ger-assunto" class="form-control">
+              <option value="imprensa">Imprensa/Mídia</option>
+              <option value="parceria">Parceria Institucional</option>
+              <option value="sugestao">Sugestão</option>
+              <option value="duvida">Dúvida Geral</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Mensagem *</label><textarea id="ger-msg" class="form-control" style="min-height:120px" placeholder="Como podemos te ajudar?"></textarea></div>
+        <button class="submit-btn" style="background:#8b5cf6;color:#fff" onclick="enviarContato('geral')"><i class="fas fa-paper-plane"></i> Enviar Mensagem</button>
+        <div id="ger-success" class="alert alert-success mt-2" style="display:none"><i class="fas fa-check-circle"></i> Mensagem enviada! Responderemos em breve.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <span style="font-size:2rem">🦉</span>
+          <div>
+            <div style="font-weight:700;color:var(--cyan)">MN Imperialowls</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">Projeto Social Esportivo</div>
+          </div>
+        </div>
+        <p class="footer-desc">Transformando vidas através do esporte, educação e cidadania. Cada atleta é uma história de superação.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Projeto</h4>
+        <ul>
+          <li><a href="#sobre">Sobre Nós</a></li>
+          <li><a href="#missao">Missão e Valores</a></li>
+          <li><a href="#equipes">Nossas Equipes</a></li>
+          <li><a href="#impacto">Impacto Social</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Participe</h4>
+        <ul>
+          <li><a href="#contato" onclick="showContato('atleta')">Sou Atleta</a></li>
+          <li><a href="#contato" onclick="showContato('voluntario')">Sou Voluntário</a></li>
+          <li><a href="#contato" onclick="showContato('patrocinador')">Sou Patrocinador</a></li>
+          <li><a href="#contato" onclick="showContato('geral')">Contato Geral</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Acesso</h4>
+        <ul>
+          <li><a href="login.html">Área Administrativa</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 MN Imperialowls. Todos os direitos reservados. | Projeto Social Esportivo</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    // Partículas
+    (function() {
+      const container = document.getElementById('particles');
+      if (!container) return;
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 4 + 2;
+        p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s`;
+        container.appendChild(p);
+      }
+    })();
+
+    // Carrega equipes do site
+    async function loadEquipesSite() {
+      const grid = document.getElementById('equipes-site');
+      try {
+        if (typeof SupaDB === 'undefined') throw new Error('');
+        const equipes = await SupaDB.list('equipes', { sort: 'nome_equipe' });
+        if (equipes.length === 0) {
+          grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:32px">Equipes em breve...</div>`;
+          return;
+        }
+        grid.innerHTML = equipes.map(e => `
+          <div class="card" style="text-align:center;padding:32px">
+            <div style="font-size:3rem;margin-bottom:16px">🛡️</div>
+            <h3 style="color:var(--cyan)">${e.nome_equipe}</h3>
+            ${e.categoria ? `<span class="badge badge-cyan" style="margin:8px auto">${e.categoria}</span>` : ''}
+            ${e.local_treino ? `<p style="font-size:0.85rem;color:var(--text-muted);margin-top:8px"><i class="fas fa-map-pin"></i> ${e.local_treino}</p>` : ''}
+            ${e.horarios ? `<p style="font-size:0.85rem;color:var(--text-muted)"><i class="fas fa-clock"></i> ${e.horarios}</p>` : ''}
+          </div>
+        `).join('');
+      } catch (e) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:32px">
+          <div style="font-size:2rem;margin-bottom:12px">🛡️</div>
+          <p style="color:var(--text-muted)">Equipes serão exibidas após configuração do banco de dados.</p>
+        </div>`;
+      }
+    }
+
+    // Carrega conteúdo dinâmico
+    async function loadSiteContent() {
+      try {
+        if (typeof SupaDB === 'undefined') return;
+        const items = await SupaDB.list('site_content');
+        items.forEach(item => {
+          const el = document.getElementById(item.chave);
+          if (el && item.valor) el.textContent = item.valor;
+        });
+      } catch (e) {}
+    }
+
+    // Tab de contato
+    function showContato(tipo, btn) {
+      document.querySelectorAll('.contato-form-area').forEach(f => f.classList.remove('active'));
+      document.querySelectorAll('.contato-tab-btn').forEach(b => b.classList.remove('active'));
+      const form = document.getElementById(`form-${tipo}`);
+      if (form) form.classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    // Enviar formulário de contato
+    async function enviarContato(tipo) {
+      const prefixos = { patrocinador:'pat', voluntario:'vol', atleta:'atl', geral:'ger' };
+      const pref = prefixos[tipo];
+
+      const nome = document.getElementById(`${pref}-nome`)?.value?.trim();
+      const email = document.getElementById(`${pref}-email`)?.value?.trim();
+      if (!nome || !email) { showToast('Preencha nome e e-mail.', 'error'); return; }
+
+      // Monta payload dinâmico
+      const payload = { tipo, nome, email };
+      const campos = document.querySelectorAll(`#form-${tipo} input, #form-${tipo} textarea, #form-${tipo} select`);
+      campos.forEach(el => {
+        if (el.id && el.type !== 'hidden') {
+          const key = el.id.replace(pref+'-','');
+          payload[key] = el.value;
+        }
+      });
+
+      // Coleta checkboxes (voluntário)
+      const checks = document.querySelectorAll(`[name="${pref}-area"]:checked`);
+      if (checks.length) payload['areas'] = Array.from(checks).map(c => c.value).join(', ');
+
+      try {
+        if (typeof SupaDB !== 'undefined') {
+          await SupaDB.create('contatos', payload);
+        }
+        document.getElementById(`${pref}-success`).style.display = 'flex';
+        showToast('Formulário enviado com sucesso!', 'success');
+        setTimeout(() => {
+          document.getElementById(`${pref}-success`).style.display = 'none';
+        }, 5000);
+      } catch (e) {
+        showToast('Erro ao enviar. Tente novamente.', 'error');
+      }
+    }
+
+    // Inicia
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSiteContent();
+      loadEquipesSite();
+    });
+  </script>
+</body>
+</html>
